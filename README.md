@@ -625,8 +625,8 @@ $$\mu_{effective} \approx \sqrt{\mu_{floor} \times \mu_{foot}}$$
 | **Fallen** | No | **YES** 🔴 | No |
 
 <p align="center">
-<img src="plots\delay_ablation.png" width="500" alt="delay_ablation">
-<br> Observation Delay of 0, 1, 2 policy steps (0, 20, 40 ms)
+   <img src="plots\delay_ablation.png" width="500" alt="delay_ablation">
+   <br> Observation Delay of 0, 1, 2 policy steps
 </p>
 
 #### Stage 3 Key Finding: 20ms Delay Causes Fall
@@ -1120,242 +1120,126 @@ This concept draws direct inspiration from Phase 1 (Base Policy Training) of Kum
 
 ---
 
-### Files Created for Bonus Section
-
-```
-legged_gym/envs/go2/
-├── go2_rma_config.py                          # RMA configuration with domain rand
-└── go2_rma_env.py                             # RMA environment with privileged obs
-
-legged_gym/scripts/
-├── collect_actuator_data_for_actuator_net.py  # Collect data in actuator_net format
-├── collect_excitation_data.py                  # Collect diverse excitation trajectories (V2)
-├── collect_hwangbo_excitation.py               # Hwangbo-style excitation data (V3)
-├── collect_residual_data.py                    # Collect Δτ = τ_isaac - τ_pd
-├── train_actuator_net_v2.py                    # Train ActuatorNet V2
-└── train_residual_net.py                       # Train residual network
-
-deploy/deploy_mujoco/
-├── deploy_mujoco_go2_actuator_net.py          # Deploy with ActuatorNet V1
-├── deploy_mujoco_go2_actuator_net_v2.py       # Deploy with ActuatorNet V2
-├── deploy_transient_actuator_net_v2.py        # Test ActuatorNet V2 transient response
-├── deploy_transient_actuator_net_v3.py        # Test ActuatorNet V3 transient response
-├── deploy_mujoco_go2_residual.py              # Deploy with PD + Residual
-├── deploy_mujoco_go2_clipping.py              # Deploy with explicit torque clipping
-├── deploy_rma_cmd_switch.py                   # Test command switching scenarios
-├── deploy_transient_analysis.py               # Detailed transient metrics
-└── configs/go2_rma.yaml                       # Config for RMA policy
-
-logs/
-├── residual_data.csv                          # Collected residual data (180,000 samples)
-├── residual_net.pt                            # Trained residual model
-├── residual_scaler.pkl                        # Feature scaler for residual
-├── actuator_net_v2.pt                         # Trained ActuatorNet V2
-├── actuator_net_v2_scaler_X.pkl               # Input scaler for ActuatorNet V2
-├── actuator_net_v2_scaler_y.pkl               # Output scaler for ActuatorNet V2
-├── transient_analysis/                        # Transient response logs
-└── go2_rma/Jan31_20-18-52_/model_5000.pt     # Trained RMA policy
-
-~/6619_ws/actuator_net/app/resources/
-├── actuator_data.csv                          # Original ActuatorNet data (30,000 samples)
-├── excitation_data.csv                        # Policy-driven excitation (V2, 750,000 samples)
-├── hwangbo_excitation_data.csv                # Hwangbo-style excitation (V3, 420,000 samples)
-├── actuator.pth                               # Trained ActuatorNet V3 model
-├── scaler.pkl                                 # Input scaler for ActuatorNet V3
-└── motor_data.pkl                             # Processed training data for V3
-```
-
----
-
-## Implementation Details
-
-### What We Built (Beyond unitree_rl_gym)
-
-The original `unitree_rl_gym` package only supports Isaac Gym training and playback. We created a complete **sim-to-sim analysis pipeline**:
-
-#### 1. MuJoCo Deployment Pipeline
-```
-deploy/deploy_mujoco/
-├── configs/
-│   ├── go2.yaml                    # Base config
-│   ├── go2_rma.yaml                # RMA policy config
-│   ├── go2_kp_*.yaml               # Kp ablation
-│   ├── go2_foot_*.yaml             # Foot friction ablation
-│   └── go2_dt_*.yaml               # Timestep ablation
-├── deploy_mujoco_go2.py            # Basic deployment
-├── deploy_mujoco_go2_logging.py    # With metric logging
-├── deploy_mujoco_go2_cmd_switch.py # Command switching
-├── deploy_mujoco_go2_delay.py      # Observation delay test
-├── deploy_mujoco_go2_residual.py   # Residual learning
-├── deploy_mujoco_go2_actuator_net.py # ActuatorNet
-├── deploy_rma_cmd_switch.py        # RMA command switching
-└── sanity_check_*.py               # Validation scripts
-```
-
-#### 2. Isaac Gym Extensions
-```
-legged_gym/scripts/
-├── play_logging.py                 # Baseline logging
-├── play_cmd_switch.py              # Command switching
-├── collect_residual_data.py        # Residual data collection
-├── collect_actuator_data_for_actuator_net.py # ActuatorNet data
-└── train_residual_net.py           # Train residual network
-
-legged_gym/envs/go2/
-├── go2_rma_config.py               # RMA configuration
-└── go2_rma_env.py                  # RMA environment
-```
-
-#### 3. MuJoCo Scene Files
-```
-unitree_mujoco/unitree_robots/go2/
-├── scene_flat.xml              # Flat terrain
-├── scene_foot_02.xml           # μ_foot = 0.2
-├── scene_foot_08.xml           # μ_foot = 0.8
-└── variants/
-    ├── go2_foot_02.xml
-    └── go2_foot_08.xml
-```
-
-#### 4. Analysis Tools
-```
-scripts/
-└── plot_results.py             # Generate comparison plots
-
-logs/sim2sim/
-├── isaacgym_baseline_*.npz
-├── mujoco_baseline_*.npz
-├── cmd_switch/
-└── delay/
-```
-
-### Key Technical Challenges Solved
-
-1. **Quaternion Convention** — Isaac Gym (xyzw) vs MuJoCo (wxyz)
-2. **Actuator Remapping** — Different joint ordering in ctrl array
-3. **Velocity Frame Transformation** — World to body frame
-4. **Observation Building** — Reconstruct 48-dim obs vector manually
-5. **Torque Clipping Discovery** — Found Isaac Gym's implicit ±30 N·m limit
-6. **Velocity-Dependent Dynamics** — Discovered through residual analysis
-
----
-
-## Experimental Pipeline
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    TRAINING (Isaac Gym)                         │
-│  train.py → model_5000.pt → export → policy_1.pt                │
-│  Reward weights: tracking_lin_vel=1.0, tracking_ang_vel=1.0     │
-└─────────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                 STAGE 0: SANITY CHECKS                          │
-│  • Zero-action stability                                        │
-│  • Observation parity                                           │
-│  • Joint/actuator order verification                            │
-└─────────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                 STAGE 1: BASELINE COMPARISON                    │
-│  Isaac Gym                    MuJoCo                            │
-│  play_logging.py      →      deploy_mujoco_go2_logging.py       │
-│  play_cmd_switch.py   →      deploy_mujoco_go2_cmd_switch.py    │
-│  Scenarios: S1_stop, S2_turn, S3_lateral                        │
-└─────────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────────┐
-│              STAGE 1.5: PARAMETER ABLATION                      │
-│  • Kp sweep: 10, 20, 30, 40                                     │
-│  • dt sweep: 0.002, 0.005, 0.01                                 │
-│  • Floor friction sweep: 0.5, 1.0, 1.5                          │
-└─────────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────────┐
-│              STAGE 2: FOOT FRICTION SWEEP                       │
-│  • μ_foot: 0.2, 0.4, 0.8                                        │
-│  • Scenarios: S2_turn (friction-sensitive)                      │
-└─────────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────────┐
-│              STAGE 3: OBSERVATION DELAY                         │
-│  • Delay: 0, 1, 2 steps (0, 20, 40 ms)                          │
-│  • Scenario: S2_turn                                            │
-│  • Key finding: 20ms delay causes FALL                          │
-└─────────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────────┐
-│              BONUS: MISMATCH REDUCTION                          │
-│  • ActuatorNet (sucess with v3)                                 │
-│  • Residual Learning (success: -12-44% error)                   │
-│  • RMA Policy (success: -22-31% pitch/roll)                     │
-└─────────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                    ANALYSIS & REPORTING                         │
-│  • plot_results.py → PNG plots                                  │
-│  • README_SIM2SIM.md                                            │
-└─────────────────────────────────────────────────────────────────┘
-```
-
----
-
 ## Usage
 
-### Train Policy (Isaac Gym)
+### Prerequisites
+
+**1. Clone repositories:**
+```bash
+git clone https://github.com/
+
+# MuJoCo robot models
+git clone https://github.com/unitreerobotics/unitree_mujoco.git
+
+# ActuatorNet
+git clone https://github.com/sunzhon/actuator_net.git
+```
+
+**2. Create conda environment:**
+```bash
+conda create -n unitree_rl python=3.8 -y
+conda activate unitree_rl
+```
+
+**3. Install dependencies:**
+```bash
+cd ~/6619_ws/unitree_rl_gym
+
+# Isaac Gym (download from NVIDIA)
+pip install -e isaacgym/python
+
+# Core packages
+pip install torch torchvision
+pip install mujoco mujoco-viewer
+pip install numpy scipy matplotlib pyyaml
+
+# RL training
+pip install -e .
+
+# ActuatorNet
+cd ~/6619_ws/actuator_net
+pip install -e .
+```
+
+**4. Verify setup:**
 ```bash
 conda activate unitree_rl
 cd ~/6619_ws/unitree_rl_gym
 
-# Original policy
+# Test Isaac Gym
+python -c "from isaacgym import gymapi; print('Isaac Gym OK')"
+
+# Test MuJoCo
+python -c "import mujoco; print('MuJoCo OK')"
+```
+
+### Training
+
+```bash
+# Standard policy
 python legged_gym/scripts/train.py --task=go2 --headless --max_iterations=5000
 
-# RMA policy
+# RMA policy (with domain randomization)
 python legged_gym/scripts/train.py --task=go2_rma --headless --max_iterations=5000
 ```
-### Play Policy (Isaac Gym)
+
+### Isaac Gym Evaluation
+
 ```bash
-python legged_gym/scripts/play.py --task=go2 --load_run=Jan30_23-48-03_ --num_envs=1 --max_iterations=1
-```
+# Playback
+python legged_gym/scripts/play.py --task=go2 --num_envs=1
 
-### Deploy to MuJoCo
-```bash
-# Basic deployment
-python deploy/deploy_mujoco/deploy_mujoco_go2.py go2.yaml
-
-
-
-# With logging
-python deploy/deploy_mujoco/deploy_mujoco_go2_logging.py go2.yaml --duration 10
-
-# Command switching with Original Policy
-python deploy/deploy_mujoco/deploy_mujoco_go2_cmd_switch.py go2.yaml --scenario S2_turn
-
-# With observation 20ms delay
-python deploy/deploy_mujoco/deploy_mujoco_go2_delay.py go2.yaml --scenario S2_turn --delay 1
-
-# With actuator_net v2 of S2 scenario
-python deploy/deploy_mujoco/deploy_actuator_net_v2_cmd_switch.py
-# With actuator_net v3 of S2 scenario
-python deploy/deploy_mujoco/deploy_transient_actuator_net_v3.py S2
-
-# With residual learning
-python deploy/deploy_mujoco/deploy_mujoco_go2_residual.py go2.yaml --duration 10 --cmd 0.5 0.0 0.0
-
-# RMA policy
-python deploy/deploy_mujoco/deploy_mujoco_go2_residual.py go2_rma.yaml --pd --duration 10 --cmd 0.5 0.0 0.0
-```
-
-### Run Isaac Gym Evaluation
-```bash
-# Baseline
+# Baseline logging
 python legged_gym/scripts/play_logging.py --task=go2
 
 # Command switching
 python legged_gym/scripts/play_cmd_switch.py --task=go2 --scenario S2_turn
 ```
 
+### MuJoCo Deployment
+
+```bash
+# Basic deployment (interactive viewer)
+python deploy/deploy_mujoco/deploy_mujoco_go2.py go2.yaml
+
+# With metric logging
+python deploy/deploy_mujoco/deploy_mujoco_go2_logging.py go2.yaml --duration 10
+
+# Command switching scenarios
+python deploy/deploy_mujoco/deploy_mujoco_go2_cmd_switch.py go2.yaml --scenario S2_turn
+
+# Observation delay test
+python deploy/deploy_mujoco/deploy_mujoco_go2_delay.py go2.yaml --scenario S2_turn --delay 1
+```
+
+### Mismatch Reduction Controllers
+
+```bash
+# PD + Residual Learning
+python deploy/deploy_mujoco/deploy_mujoco_go2_residual.py go2.yaml --duration 10 --cmd 0.5 0.0 0.0
+
+# RMA Policy
+python deploy/deploy_mujoco/deploy_rma_cmd_switch.py go2_rma.yaml
+
+# ActuatorNet V3 transient analysis (S1/S2/S3)
+python deploy/deploy_mujoco/deploy_transient_actuator_net_v3.py S2 --headless
+```
+
+### Data Collection & Training (Bonus)
+
+```bash
+# Collect actuator data (Hwangbo-style excitation)
+python legged_gym/scripts/collect_hwangbo_excitation.py --task=go2
+
+# Collect residual data
+python legged_gym/scripts/collect_residual_data.py --task=go2
+
+# Train residual network
+python legged_gym/scripts/train_residual_net.py
+```
+
 ### Generate Plots
+
 ```bash
 python scripts/plot_results.py
 ```
@@ -1366,46 +1250,75 @@ python scripts/plot_results.py
 
 ```
 unitree_rl_gym/
+│
 ├── legged_gym/
-│   ├── envs/
-│   │   └── go2/
-│   │       ├── go2_config.py
-│   │       ├── go2_rma_config.py      # NEW: RMA config
-│   │       └── go2_rma_env.py         # NEW: RMA env
+│   ├── envs/go2/
+│   │   ├── go2_config.py                              # Base Go2 configuration
+│   │   ├── go2_rma_config.py                          # RMA config (domain randomization)
+│   │   └── go2_rma_env.py                             # RMA env (privileged observations)
+│   │
 │   └── scripts/
-│       ├── train.py
-│       ├── play.py
-│       ├── play_logging.py
-│       ├── play_cmd_switch.py
-│       ├── collect_residual_data.py    # NEW
-│       ├── collect_actuator_data_for_actuator_net.py  # NEW
-│       └── train_residual_net.py       # NEW
-├── deploy/
-│   └── deploy_mujoco/
-│       ├── configs/
-│       │   ├── go2.yaml
-│       │   ├── go2_rma.yaml            # NEW
-│       │   └── ...
-│       ├── deploy_mujoco_go2.py
-│       ├── deploy_mujoco_go2_logging.py
-│       ├── deploy_mujoco_go2_cmd_switch.py
-│       ├── deploy_mujoco_go2_delay.py
-│       ├── deploy_mujoco_go2_residual.py    # NEW
-│       ├── deploy_mujoco_go2_actuator_net.py # NEW
-│       ├── deploy_mujoco_go2_clipping.py    # NEW
-│       ├── deploy_rma_cmd_switch.py         # NEW
-│       └── sanity_check_*.py
+│       ├── train.py                                   # Policy training
+│       ├── play.py / play_logging.py                  # Playback & logging
+│       ├── play_cmd_switch.py                         # Command switching in Isaac Gym
+│       ├── collect_actuator_data_for_actuator_net.py  # ActuatorNet V1 data
+│       ├── collect_excitation_data.py                 # Policy-driven excitation (V2)
+│       ├── collect_hwangbo_excitation.py              # Hwangbo-style excitation (V3)
+│       ├── collect_residual_data.py                   # Residual Δτ data
+│       ├── train_actuator_net_v2.py                   # Train ActuatorNet V2
+│       └── train_residual_net.py                      # Train residual network
+│
+├── deploy/deploy_mujoco/
+│   ├── configs/
+│   │   ├── go2.yaml                                   # Base MuJoCo config
+│   │   ├── go2_rma.yaml                               # RMA policy config
+│   │   ├── go2_kp_*.yaml                              # Kp ablation configs
+│   │   └── go2_foot_*.yaml                            # Foot friction ablation configs
+│   │
+│   ├── deploy_mujoco_go2.py                           # Basic deployment
+│   ├── deploy_mujoco_go2_logging.py                   # With metric logging
+│   ├── deploy_mujoco_go2_cmd_switch.py                # Command switching
+│   ├── deploy_mujoco_go2_delay.py                     # Observation delay test
+│   ├── deploy_mujoco_go2_residual.py                  # PD + Residual Learning
+│   ├── deploy_mujoco_go2_clipping.py                  # Explicit torque clipping
+│   ├── deploy_mujoco_go2_actuator_net.py              # ActuatorNet V1
+│   ├── deploy_mujoco_go2_actuator_net_v2.py           # ActuatorNet V2
+│   ├── deploy_transient_actuator_net_v2.py            # ActuatorNet V2 transient
+│   ├── deploy_transient_actuator_net_v3.py            # ActuatorNet V3 transient
+│   ├── deploy_transient_analysis.py                   # General transient metrics
+│   ├── deploy_rma_cmd_switch.py                       # RMA command switching
+│   └── sanity_check_*.py                              # Validation scripts
+│
+├── unitree_mujoco/unitree_robots/go2/
+│   ├── scene_flat.xml                                 # Flat terrain
+│   ├── scene_foot_02.xml                              # μ_foot = 0.2
+│   └── scene_foot_08.xml                              # μ_foot = 0.8
+│
 ├── scripts/
-│   └── plot_results.py
+│   └── plot_results.py                                # Generate comparison plots
+│
 ├── logs/
-│   ├── rough_go2/
-│   ├── go2_rma/                        # NEW: RMA logs
-│   ├── sim2sim/
-│   ├── residual_data.csv               # NEW
-│   ├── residual_net.pt                 # NEW
-│   └── residual_scaler.pkl             # NEW
-├── plots/
+│   ├── rough_go2/Jan30_23-48-03_/model_5000.pt       # Trained standard policy
+│   ├── go2_rma/Jan31_20-18-52_/model_5000.pt         # Trained RMA policy
+│   ├── sim2sim/                                       # Baseline & ablation logs
+│   ├── transient_analysis/                            # Transient response logs
+│   ├── residual_net.pt                                # Trained residual model
+│   ├── residual_scaler.pkl                            # Residual feature scaler
+│   ├── actuator_net_v2.pt                             # Trained ActuatorNet V2
+│   ├── actuator_net_v2_scaler_X.pkl                   # V2 input scaler
+│   └── actuator_net_v2_scaler_y.pkl                   # V2 output scaler
+│
+├── plots/                                             # Generated figures
 └── README_SIM2SIM.md
+```
+
+**External dependency:**
+```
+~/actuator_net/app/resources/
+├── hwangbo_excitation_data.csv                        # Hwangbo excitation data (V3)
+├── actuator.pth                                       # Trained ActuatorNet V3 model
+├── scaler.pkl                                         # V3 input scaler
+└── motor_data.pkl                                     # Processed training data
 ```
 
 ---
@@ -1425,6 +1338,57 @@ unitree_rl_gym/
 | Command switch logs | `logs/sim2sim/cmd_switch/` |
 | Delay logs | `logs/sim2sim/delay/` |
 | Plots | `plots/` |
+
+---
+
+## Experimental Pipeline
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    TRAINING (Isaac Gym)                         │
+│  train.py → model_5000.pt → export → policy_1.pt               │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                 STAGE 0: SANITY CHECKS                          │
+│  Zero-action stability · Observation parity · Joint ordering    │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                 STAGE 1: BASELINE COMPARISON                    │
+│  Isaac Gym ←→ MuJoCo | Scenarios: S1 Stop, S2 Turn, S3 Lateral │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│        STAGE 1.5: PARAMETER ABLATION (One Factor at a Time)     │
+│  Kp sweep · dt sweep · Floor friction sweep                     │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│              STAGE 2: FOOT FRICTION SWEEP                       │
+│  μ_foot: 0.2, 0.4, 0.8 | Finding: μ_foot=0.8 reduces pitch 88%│
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│              STAGE 3: OBSERVATION DELAY                         │
+│  0 / 20 / 40 ms | Finding: 20ms causes FALL in S2 Turn         │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│              BONUS: MISMATCH REDUCTION                          │
+│  ActuatorNet V1→V2→V3 · Residual Learning · RMA Policy          │
+└─────────────────────────────────────────────────────────────────┘
+```
+---
+
+### Key Technical Challenges Solved
+
+1. **Quaternion Convention** — Isaac Gym (xyzw) vs MuJoCo (wxyz)
+2. **Actuator Remapping** — Different joint ordering in ctrl array
+3. **Velocity Frame Transformation** — World to body frame
+4. **Observation Building** — Reconstruct 48-dim obs vector manually
+5. **Torque Clipping Discovery** — Found Isaac Gym's implicit ±30 N·m limit
+6. **Velocity-Dependent Dynamics** — Discovered through residual analysis
 
 ---
 
