@@ -1397,7 +1397,7 @@ conda activate unitree_rl
 
 **3. Install dependencies:**
 ```bash
-cd ~/6619_ws/unitree_rl_gym
+cd ~/Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion/unitree_rl_gym
 
 # Isaac Gym (download from NVIDIA)
 pip install -e isaacgym/python
@@ -1411,14 +1411,14 @@ pip install numpy scipy matplotlib pyyaml
 pip install -e .
 
 # ActuatorNet
-cd ~/6619_ws/actuator_net
+cd ~/Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion/actuator_net
 pip install -e .
 ```
 
 **4. Verify setup:**
 ```bash
 conda activate unitree_rl
-cd ~/6619_ws/unitree_rl_gym
+cd ~/Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion/unitree_rl_gym
 
 # Test Isaac Gym
 python -c "from isaacgym import gymapi; print('Isaac Gym OK')"

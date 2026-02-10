@@ -26,7 +26,7 @@ def collect_excitation_data():
     env, _ = task_registry.make_env(name=args.task, args=args, env_cfg=env_cfg)
     
     # Load trained policy
-    policy_path = os.path.expanduser("~/6619_ws/unitree_rl_gym/logs/rough_go2/exported/policies/policy_1.pt")
+    policy_path = os.path.expanduser("~/Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion/unitree_rl_gym/logs/rough_go2/exported/policies/policy_1.pt")
     policy = torch.jit.load(policy_path).to(env.device)
     policy.eval()
     

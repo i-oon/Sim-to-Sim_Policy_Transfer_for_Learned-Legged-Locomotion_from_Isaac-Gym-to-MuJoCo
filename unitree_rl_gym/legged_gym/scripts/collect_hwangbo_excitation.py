@@ -11,7 +11,7 @@ import numpy as np
 import os
 import sys
 
-LEGGED_GYM_ROOT_DIR = os.path.expanduser("~/6619_ws/unitree_rl_gym")
+LEGGED_GYM_ROOT_DIR = os.path.expanduser("~/Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion/unitree_rl_gym")
 sys.path.append(LEGGED_GYM_ROOT_DIR)
 
 from legged_gym import LEGGED_GYM_ROOT_DIR as LG_ROOT
@@ -260,7 +260,7 @@ def collect_excitation_data():
     import pandas as pd
     df = pd.DataFrame(all_rows)
     
-    save_path = os.path.expanduser("~/6619_ws/actuator_net/app/resources/hwangbo_excitation_data.csv")
+    save_path = os.path.expanduser("~/Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion/actuator_net/app/resources/hwangbo_excitation_data.csv")
     df.to_csv(save_path, index=False)
     
     print()

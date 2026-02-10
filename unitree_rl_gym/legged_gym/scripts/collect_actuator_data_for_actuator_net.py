@@ -110,7 +110,7 @@ def collect_actuator_data(args, duration=60.0):
     df = pd.DataFrame(data_rows, columns=columns)
     
     # Save to actuator_net resources folder
-    save_path = os.path.expanduser("~/6619_ws/actuator_net/app/resources/actuator_data.csv")
+    save_path = os.path.expanduser("~/Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion/actuator_net/app/resources/actuator_data.csv")
     df.to_csv(save_path, index=False)
     
     print(f"\nSaved {len(df)} samples to: {save_path}")

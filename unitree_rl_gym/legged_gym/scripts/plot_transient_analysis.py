@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import os
 import json
 
-LEGGED_GYM_ROOT_DIR = os.path.expanduser("~/6619_ws/unitree_rl_gym")
+LEGGED_GYM_ROOT_DIR = os.path.expanduser("~/Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion/unitree_rl_gym")
 LOG_DIR = os.path.join(LEGGED_GYM_ROOT_DIR, "logs/transient_analysis")
 PLOT_DIR = os.path.join(LEGGED_GYM_ROOT_DIR, "plots")
 os.makedirs(PLOT_DIR, exist_ok=True)

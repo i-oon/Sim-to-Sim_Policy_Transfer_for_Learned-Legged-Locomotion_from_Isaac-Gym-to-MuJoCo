@@ -52,7 +52,7 @@ from datetime import datetime
 
 warnings.filterwarnings("ignore", category=FutureWarning, module="torch")
 
-LEGGED_GYM_ROOT_DIR = os.path.expanduser("~/6619_ws/unitree_rl_gym")
+LEGGED_GYM_ROOT_DIR = os.path.expanduser("~/Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion/unitree_rl_gym")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # ── optional transient metrics ───────────────────────────────────────

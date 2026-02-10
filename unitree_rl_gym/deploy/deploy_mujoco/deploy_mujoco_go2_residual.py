@@ -12,7 +12,7 @@ import pickle
 import time
 import argparse
 
-LEGGED_GYM_ROOT_DIR = os.path.expanduser("~/6619_ws/unitree_rl_gym")
+LEGGED_GYM_ROOT_DIR = os.path.expanduser("~/Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion/unitree_rl_gym")
 
 def quat_rotate_inverse(q, v):
     q_w, q_x, q_y, q_z = q

@@ -9,7 +9,7 @@ import time
 import argparse
 from datetime import datetime
 
-LEGGED_GYM_ROOT_DIR = os.path.expanduser("~/6619_ws/unitree_rl_gym")
+LEGGED_GYM_ROOT_DIR = os.path.expanduser("~/Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion/unitree_rl_gym")
 
 # Import transient metrics calculator
 import sys

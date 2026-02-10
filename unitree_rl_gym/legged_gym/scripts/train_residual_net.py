@@ -108,6 +108,6 @@ def train_residual_net(data_path, epochs=200, batch_size=512):
 
 if __name__ == "__main__":
     train_residual_net(
-        os.path.expanduser("~/6619_ws/unitree_rl_gym/logs/residual_data.csv"),
+        os.path.expanduser("~/Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion/unitree_rl_gym/logs/residual_data.csv"),
         epochs=200
     )

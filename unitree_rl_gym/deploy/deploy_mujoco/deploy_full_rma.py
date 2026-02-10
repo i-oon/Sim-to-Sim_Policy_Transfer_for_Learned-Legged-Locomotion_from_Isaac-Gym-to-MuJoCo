@@ -7,7 +7,7 @@ Uses:
   - No env_params needed — adaptation module estimates from obs history
 
 Usage:
-  cd ~/6619_ws/unitree_rl_gym
+  cd ~/Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion/unitree_rl_gym
   python deploy/deploy_mujoco/deploy_full_rma.py \
       --policy_path=logs/go2_full_rma/<run>/model_5000.pt \
       --adaptation_path=logs/go2_full_rma/<run>/adaptation_data/adaptation_module.pt \

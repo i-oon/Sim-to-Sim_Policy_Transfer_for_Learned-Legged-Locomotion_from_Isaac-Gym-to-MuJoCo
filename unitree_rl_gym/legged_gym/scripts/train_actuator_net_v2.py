@@ -33,7 +33,7 @@ def train_actuator_net():
     print("=== Training ActuatorNet V2 ===")
     
     # Load excitation data
-    df = pd.read_csv(os.path.expanduser("~/6619_ws/actuator_net/app/resources/excitation_data.csv"))
+    df = pd.read_csv(os.path.expanduser("~/Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion/actuator_net/app/resources/excitation_data.csv"))
     print(f"Loaded {len(df)} samples")
     
     # Compute pos_error = action * scale + default - pos
@@ -170,7 +170,7 @@ def train_actuator_net():
     df_test = df.iloc[train_test_split(range(len(df)), test_size=0.2, random_state=42)[1]]
     
     # Save model
-    save_dir = os.path.expanduser("~/6619_ws/unitree_rl_gym/logs")
+    save_dir = os.path.expanduser("~/Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion/unitree_rl_gym/logs")
     
     # Save as JIT
     model_scripted = torch.jit.script(model)

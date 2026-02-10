@@ -6,7 +6,7 @@ Supervised learning: obs_history → ê ≈ e (encoder output)
 Loss: MSE(adaptation_module(obs_history), encoder(env_params))
 
 Usage:
-  cd ~/6619_ws/unitree_rl_gym
+  cd ~/Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion/unitree_rl_gym
   python legged_gym/scripts/train_adaptation.py --data_path=logs/go2_full_rma/Feb09_15-09-59_/adaptation_data/rma_adaptation_data.pt
 """
 
