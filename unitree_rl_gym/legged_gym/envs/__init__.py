@@ -12,7 +12,3 @@ from legged_gym.envs.go2.go2_rma_config import Go2RMACfg, Go2RMACfgPPO
 from legged_gym.envs.go2.go2_rma_env import Go2RMAEnv
 task_registry.register("go2_rma", Go2RMAEnv, Go2RMACfg(), Go2RMACfgPPO())
 
-# Go2 RMA Full
-from legged_gym.envs.go2.go2_full_rma_config import Go2FullRMACfg, Go2FullRMACfgPPO
-from legged_gym.envs.go2.go2_full_rma_env import Go2FullRMAEnv
-task_registry.register("go2_full_rma", Go2FullRMAEnv, Go2FullRMACfg(), Go2FullRMACfgPPO())

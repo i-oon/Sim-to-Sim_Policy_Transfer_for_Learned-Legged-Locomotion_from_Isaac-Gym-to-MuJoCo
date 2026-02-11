@@ -25,7 +25,7 @@ def collect_data(args):
     # =========================================================================
     # 2. Load trained policy (Phase 1 Teacher)
     # =========================================================================
-    log_root = os.path.join('logs', 'go2_full_rma')
+    log_root = os.path.join('logs', 'go2_rma')
     run_path = os.path.join(log_root, args.load_run)
     ckpts = sorted(glob.glob(os.path.join(run_path, 'model_*.pt')))
     ckpt_path = ckpts[-1]
@@ -122,14 +122,14 @@ def collect_data(args):
 if __name__ == '__main__':
     args = get_args()
     parser = argparse.ArgumentParser(description="RMA Collector", add_help=False)
-    parser.add_argument('--num_steps', type=int, default=1000)
-    parser.add_argument('--num_envs', type=int, default=4096)
+    parser.add_argument('--num_steps', type=int, default=150)
+    parser.add_argument('--num_envs', type=int, default=2048)
     parser.add_argument('--device', type=str, default='cuda:0')
     
     custom_args, _ = parser.parse_known_args()
     args.num_steps = custom_args.num_steps
     args.num_envs = custom_args.num_envs
     args.device = custom_args.device
-    args.task = 'go2_full_rma'
+    args.task = 'go2_rma'
 
     collect_data(args)

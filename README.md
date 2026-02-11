@@ -232,6 +232,29 @@ t=0s ─────────────► t=3s ─────────
 - Δ(peak torque) = MuJoCo − Isaac Gym
 - Δ(max pitch) = MuJoCo − Isaac Gym
 
+
+
+
+All experiments are conducted in **closed-loop without retraining**. Each episode
+lasts 6 s and begins from a **fixed nominal stance**. Velocity commands are applied
+as piecewise-constant signals with switches at t_s = 3.0 s. The policy executes
+at 50 Hz via zero-order hold over a 200 Hz physics simulation.
+
+An episode terminates early if the base height falls below 0.15 m or roll/pitch
+exceeds 1.0 rad. Each configuration is evaluated over **N = 10 episodes** with
+identical initial conditions.
+
+> **Reproducibility note:** Episodes use fixed initial conditions (identical robot
+> pose and zero velocity) without random seed variation across runs. This is
+> intentional — the objective of this study is to isolate *physics-engine
+> mismatch* between Isaac Gym and MuJoCo, not to characterize policy variance.
+> Introducing stochastic initial conditions would add variance that conflates
+> simulator differences with episode-to-episode variability, obscuring the causal
+> attribution this ablation study aims to establish. The N = 10 repetitions
+> confirm deterministic consistency within each configuration rather than sampling
+> across initial states.
+
+
 ---
 
 ## Transient Response Analysis
@@ -1680,6 +1703,8 @@ unitree_rl_gym/
 │  ActuatorNet V1→V2→V3 · Residual Learning · DR-trained Policy          │
 └─────────────────────────────────────────────────────────────────┘
 ```
+
+
 ---
 
 ### Key Technical Challenges Solved
