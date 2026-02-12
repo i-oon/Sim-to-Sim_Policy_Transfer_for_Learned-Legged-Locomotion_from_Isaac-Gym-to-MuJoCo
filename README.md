@@ -1243,9 +1243,9 @@ ln -s /path/to/your/existing/isaacgym isaacgym
 
 **3. Install dependencies:**
 ```bash
+cd ~/Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion
 # Make the script executable
 chmod +x setup.sh
-
 # Run the setup (This will create a 'unitree_rl' conda env)
 ./setup.sh
 ```
