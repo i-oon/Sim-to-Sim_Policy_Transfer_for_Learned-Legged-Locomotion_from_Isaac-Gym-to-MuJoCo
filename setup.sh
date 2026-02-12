@@ -36,7 +36,7 @@ ISAACGYM_PATH="isaacgym"
 if [ ! -d "$ISAACGYM_PATH" ]; then
     echo -e "${RED}Error: Isaac Gym not found at $ISAACGYM_PATH${NC}"
     echo -e "${YELLOW}Please download from: https://developer.nvidia.com/isaac-gym${NC}"
-    echo -e "${YELLOW}Extract and place the 'isaacgym' folder inside ''${NC}"
+    echo -e "${YELLOW}Extract and place the 'isaacgym' folder in the current directory${NC}"
     exit 1
 fi
 
@@ -129,20 +129,35 @@ pip install typeguard pyyaml tqdm
 # Install project packages
 echo -e "${GREEN}[5/5] Installing project packages...${NC}"
 
-# Install rsl-rl (check if it exists locally first)
+# Handle rsl-rl installation
 if [ -d "rsl_rl" ]; then
-    echo -e "${BLUE}Installing rsl-rl from local directory...${NC}"
-    pip install -e rsl_rl/
-elif [ -d "rsl_rl" ]; then
-    echo -e "rsl_rl...${NC}"rsl_rl/
+    echo -e "${YELLOW}Found local rsl_rl/ - checking compatibility...${NC}"
+    
+    # Try to install it
+    pip install -e rsl_rl/ 2>/dev/null
+    
+    # Test if it has required function
+    if python -c "from rsl_rl.utils import unpad_trajectories" 2>/dev/null; then
+        echo -e "${GREEN}✓ Local rsl_rl is compatible${NC}"
+    else
+        echo -e "${RED}✗ Local rsl_rl is outdated (missing unpad_trajectories)${NC}"
+        echo -e "${YELLOW}Backing up to rsl_rl.backup and installing from GitHub...${NC}"
+        mv rsl_rl rsl_rl.backup
+        pip install git+https://github.com/leggedrobotics/rsl_rl.git@v1.0.2
+    fi
 else
     echo -e "${BLUE}Installing rsl-rl from GitHub (v1.0.2)...${NC}"
+    pip install git+https://github.com/leggedrobotics/rsl_rl.git@v1.0.2
+fi
 
-# Install ActuatorNet (Only if it doesn't break the main env)
+# Now install unitree_rl_gym
+echo -e "${BLUE}Installing unitree_rl_gym...${NC}"
+pip install -e .
+
+# Install ActuatorNet dependencies (if available)
 if [ -f "actuator_net/requirements.txt" ]; then
-    echo -e "${BLUE}Attempting to install ActuatorNet dependencies...${NC}"
-    # Use --no-deps or skip the heavy GUI stuff that causes the Qt error
-    pip install matplotlib opencv-python python-dotenv || echo -e "${YELLOW}GUI dependencies failed, but core ML should work.${NC}"
+    echo -e "${BLUE}Installing ActuatorNet dependencies...${NC}"
+    pip install -r actuator_net/requirements.txt || echo -e "${YELLOW}Some ActuatorNet dependencies failed - continuing anyway${NC}"
 else
     echo -e "${YELLOW}actuator_net/requirements.txt not found - skipping${NC}"
 fi
