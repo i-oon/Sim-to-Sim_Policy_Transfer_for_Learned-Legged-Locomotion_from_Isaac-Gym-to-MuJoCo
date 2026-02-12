@@ -122,7 +122,7 @@ fi
 echo -e "${BLUE}Installing MuJoCo, RL packages, and ML stack...${NC}"
 pip install mujoco  # Native viewer included, no need for mujoco-viewer
 pip install gymnasium tensorboard
-pip install numpy scipy pandas scikit-learn
+pip install "numpy>=1.21.0,<1.24.0" scipy pandas scikit-learn
 pip install matplotlib seaborn pillow
 pip install typeguard pyyaml tqdm
 
@@ -152,14 +152,10 @@ fi
 
 # Now install unitree_rl_gym
 echo -e "${BLUE}Installing unitree_rl_gym...${NC}"
-pip install -e .
-
-# Install ActuatorNet dependencies (if available)
-if [ -f "actuator_net/requirements.txt" ]; then
-    echo -e "${BLUE}Installing ActuatorNet dependencies...${NC}"
-    pip install -r actuator_net/requirements.txt || echo -e "${YELLOW}Some ActuatorNet dependencies failed - continuing anyway${NC}"
+if [ -d "unitree_rl_gym" ]; then
+    pip install -e unitree_rl_gym/
 else
-    echo -e "${YELLOW}actuator_net/requirements.txt not found - skipping${NC}"
+    pip install -e .
 fi
 
 # Verification

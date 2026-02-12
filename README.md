@@ -1260,6 +1260,15 @@ python -c "import mujoco; print('MuJoCo OK')"
 ```
 
 
+**5. actuator_net installation:**
+```bash
+# Navigate to the project root
+cd Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion
+# Install ActuatorNet requirements
+pip install -r actuator_net/requirements.txt
+```
+
+
 **If CUDA errors occur:**
 ```bash
 # Check CUDA version
