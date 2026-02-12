@@ -1,0 +1,45 @@
+{
+  "vx": {
+    "before_mean": 0.5430226776757106,
+    "before_std": 0.03208564157370007,
+    "peak_value": 0.0015440716690678356,
+    "time_to_peak": 2.9999999999998943,
+    "overshoot_pct": -0.2843475480023957,
+    "rise_time": 0.19999999999999574,
+    "settling_time": 0.2799999999999523,
+    "final_value": 0.0018304743150236067,
+    "ss_error": 0.0018304743150236067,
+    "target": 0.0
+  },
+  "wz": {
+    "before_mean": 0.00940898493789845,
+    "before_std": 0.04228919277082635,
+    "peak_value": -0.003454474451322036,
+    "time_to_peak": 0.17999999999995442,
+    "overshoot_pct": 0.0,
+    "rise_time": null,
+    "settling_time": 0.31999999999995143,
+    "final_value": -7.797699953850731e-05,
+    "ss_error": 7.797699953850731e-05,
+    "target": 0.0
+  },
+  "torque": {
+    "peak": 13.391585984624188,
+    "mean_transient": 8.173868678108436,
+    "mean_steady": 6.905698876687335
+  },
+  "pitch": {
+    "peak": 2.8063244448487685,
+    "mean_transient": 1.5974011898823384,
+    "settling_value": 2.664790068920843
+  },
+  "roll": {
+    "peak": 2.5018494431378544,
+    "mean_transient": 0.9964261829568569,
+    "settling_value": 2.442408124837522
+  },
+  "fallen": false,
+  "scenario": "S1",
+  "controller": "PD + Residual",
+  "config": "go2.yaml"
+}

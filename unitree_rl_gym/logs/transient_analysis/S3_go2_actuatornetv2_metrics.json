@@ -1,0 +1,45 @@
+{
+  "vx": {
+    "before_mean": 0.2646814845151573,
+    "before_std": 0.021161767447687062,
+    "peak_value": 0.1907321171902369,
+    "time_to_peak": 2.2799999999999097,
+    "overshoot_pct": -309.3784699321705,
+    "rise_time": null,
+    "settling_time": null,
+    "final_value": 0.2551782902622969,
+    "ss_error": 0.04482170973770311,
+    "target": 0.3
+  },
+  "wz": {
+    "before_mean": 0.04798595580236221,
+    "before_std": 0.02625818862585899,
+    "peak_value": -0.19175708128612884,
+    "time_to_peak": 2.1999999999999114,
+    "overshoot_pct": 399.61084046321986,
+    "rise_time": 0.5199999999999889,
+    "settling_time": null,
+    "final_value": -0.09628205675731573,
+    "ss_error": 0.09628205675731573,
+    "target": 0.0
+  },
+  "torque": {
+    "peak": 13.560559272766113,
+    "mean_transient": 10.20538875579834,
+    "mean_steady": 9.856320133209229
+  },
+  "pitch": {
+    "peak": 5.070464680001495,
+    "mean_transient": 2.2843470041737364,
+    "settling_value": 3.4399693587307585
+  },
+  "roll": {
+    "peak": 2.9020240310134233,
+    "mean_transient": 1.2545245718683142,
+    "settling_value": 1.0084159819940153
+  },
+  "fallen": false,
+  "scenario": "S3",
+  "controller": "ActuatorNet V2",
+  "config": "go2.yaml"
+}

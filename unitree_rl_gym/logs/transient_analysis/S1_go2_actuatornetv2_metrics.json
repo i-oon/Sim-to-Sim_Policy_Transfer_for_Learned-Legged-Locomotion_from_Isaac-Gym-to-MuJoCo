@@ -1,0 +1,45 @@
+{
+  "vx": {
+    "before_mean": 0.5349663890655478,
+    "before_std": 0.03629722321254541,
+    "peak_value": 0.004168124521750628,
+    "time_to_peak": 2.8399999999998977,
+    "overshoot_pct": -0.7791376443352445,
+    "rise_time": 0.19999999999999574,
+    "settling_time": 0.2599999999999527,
+    "final_value": 0.005001365854462262,
+    "ss_error": 0.005001365854462262,
+    "target": 0.0
+  },
+  "wz": {
+    "before_mean": 0.007853732110930206,
+    "before_std": 0.03995834666372669,
+    "peak_value": -0.015241684491662516,
+    "time_to_peak": 0.09999999999995612,
+    "overshoot_pct": 0.0,
+    "rise_time": null,
+    "settling_time": 0.2599999999999527,
+    "final_value": -0.0008078906907747035,
+    "ss_error": 0.0008078906907747035,
+    "target": 0.0
+  },
+  "torque": {
+    "peak": 12.146180152893066,
+    "mean_transient": 8.432280025482179,
+    "mean_steady": 8.11253454208374
+  },
+  "pitch": {
+    "peak": 4.6057745487652575,
+    "mean_transient": 2.1212425503367016,
+    "settling_value": 1.6736234587595709
+  },
+  "roll": {
+    "peak": 2.2348241686889914,
+    "mean_transient": 0.5224731557756058,
+    "settling_value": 1.754029533171126
+  },
+  "fallen": false,
+  "scenario": "S1",
+  "controller": "ActuatorNet V2",
+  "config": "go2.yaml"
+}

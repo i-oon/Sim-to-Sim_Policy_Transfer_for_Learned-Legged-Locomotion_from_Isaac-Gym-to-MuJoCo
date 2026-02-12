@@ -1,0 +1,42 @@
+{
+  "vx": {
+    "before_mean": 0.23769261466457234,
+    "before_std": 0.02155006559848696,
+    "peak_value": 0.15247334337116272,
+    "time_to_peak": 0.1199999999999557,
+    "overshoot_pct": -236.77234381548408,
+    "rise_time": null,
+    "settling_time": null,
+    "final_value": 0.24669084880165681,
+    "ss_error": 0.053309151198343174,
+    "target": 0.3
+  },
+  "wz": {
+    "before_mean": 0.052656617561466154,
+    "before_std": 0.04083059367299144,
+    "peak_value": -0.2836194005036617,
+    "time_to_peak": 1.5399999999999254,
+    "overshoot_pct": 538.6206209933487,
+    "rise_time": 0.03999999999999915,
+    "settling_time": null,
+    "final_value": -0.0900682752411576,
+    "ss_error": 0.0900682752411576,
+    "target": 0.0
+  },
+  "torque": {
+    "peak": 13.881845474243164,
+    "mean_transient": 10.718743467330933,
+    "mean_steady": 9.18345866203308
+  },
+  "pitch": {
+    "peak": 4.482966297054578,
+    "mean_transient": 2.6795763652971107
+  },
+  "roll": {
+    "peak": 6.326071964729148,
+    "mean_transient": 1.1316268687980173
+  },
+  "fallen": false,
+  "scenario": "S3",
+  "controller": "ActuatorNet V3"
+}
