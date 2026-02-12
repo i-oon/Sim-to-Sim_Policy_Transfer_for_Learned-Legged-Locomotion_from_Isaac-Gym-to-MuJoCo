@@ -11,6 +11,8 @@ Sim-to-sim transfer serves as a crucial intermediate step, enabling us to evalua
 
 This repository accompanies **Exam 2** of the Sim2Real Internship Candidate Exam from VISTEC. The objective is to analyze **sim-to-sim policy transfer mismatch** for learned legged locomotion policies under **contact-rich dynamics**, with focus on **transient responses induced by command switching**. A locomotion policy is trained in **Isaac Gym (Sim A)** and transferred **without retraining** to **MuJoCo (Sim B)**.
 
+Note : [Experimental Report]((Exam2)_Sim-to-Sim_Report_Disthorn_Suttawet.pdf)
+
 <p align="center">
     <img width=45% src="sources/play_isaacgym_1.gif">
     <img width=41% src="sources/deploy_mujoco_1.gif">
@@ -23,7 +25,7 @@ This repository accompanies **Exam 2** of the Sim2Real Internship Candidate Exam
 
 - [Overview](#overview)
 - [Key Findings Summary](#key-findings-summary)
-- [Research Questions](#research-questions)
+- [Research Questions](#research-questions)ฟ
 - [Robot Platform](#robot-platform)
 - [Simulators and Configuration](#simulators-and-configuration)
   - [Sim-to-Sim Deployment Checklist](#sim-to-sim-deployment-checklist)
@@ -1208,7 +1210,7 @@ cd Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion
 
 **2. Download Isaac Gym:**
 
-⚠️ **IMPORTANT**: Isaac Gym is **NOT included** in this repository due to NVIDIA's license. You must download it separately.
+**IMPORTANT**: Isaac Gym is **NOT included** in this repository due to NVIDIA's license. You must download it separately.
 
 **Step 2.1: Download from NVIDIA**
 1. Go to: https://developer.nvidia.com/isaac-gym
@@ -1238,90 +1240,25 @@ cd ~/Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion/unitree_rl_gym/
 ln -s /path/to/your/existing/isaacgym isaacgym
 ```
 
-**3. Create conda environment:**
+
+**3. Install dependencies:**
 ```bash
-conda create -n unitree_rl python=3.8 -y
+# Make the script executable
+chmod +x setup.sh
+
+# Run the setup (This will create a 'unitree_rl' conda env)
+./setup.sh
+```
+
+**4. Verification:**
+```bash
 conda activate unitree_rl
+# Check if all engines are ready
+python -c "import torch; print(f'PyTorch OK (CUDA: {torch.cuda.is_available()})')"
+python -c "from isaacgym import gymapi; print('Isaac Gym OK')"
+python -c "import mujoco; print('MuJoCo OK')"
 ```
 
-
-**4. Install dependencies:**
-```bash
-cd ~/Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion/unitree_rl_gym
-
-# Step 4.1: Verify Isaac Gym is in place
-ls -la isaacgym/
-# If missing, go back to step 2
-
-# Step 4.2: Install Isaac Gym FIRST (before anything else)
-pip install -e isaacgym/python
-
-# Step 4.3: Install PyTorch (check CUDA version: nvidia-smi)
-# For CUDA 11.8:
-pip install torch==2.0.1 torchvision==0.15.2 --index-url https://download.pytorch.org/whl/cu118
-# For CUDA 12.1:
-# pip install torch==2.0.1 torchvision==0.15.2 --index-url https://download.pytorch.org/whl/cu121
-
-# Step 4.4: Install MuJoCo and visualization
-pip install mujoco mujoco-viewer
-
-# Step 4.5: Install RL and environment packages
-pip install gymnasium
-pip install tensorboard
-
-# Step 4.6: Install data processing and ML packages
-pip install numpy scipy pandas
-pip install scikit-learn
-pip install matplotlib seaborn
-pip install pillow
-pip install typeguard  # Fix for generate-parameter-library-py warning
-
-# Step 4.7: Install utilities
-pip install pyyaml tqdm
-
-# Step 4.8: Install unitree_rl_gym package (NOW that isaacgym is installed)
-pip install -e .
-
-# Step 4.9: Install ActuatorNet dependencies
-cd ~/Sim-to-Sim_Policy_Transfer_for_Learned-Legged-Locomotion/actuator_net
-pip install -r requirements.txt
-```
-
-**Common Isaac Gym installation issues:**
-```bash
-# If "isaacgym/python is not a valid editable requirement":
-# → You forgot to download Isaac Gym (step 2)
-
-# If "vulkan/X11 errors":
-pip install -e isaacgym/python --no-cache-dir
-
-# If "OpenGL errors":
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco210/bin
-```
-
-**Optional (for development):**
-```bash
-pip install jupyter ipython
-pip install black flake8  # code formatting
-```
-
-**5. Verify setup:**
-```bash
-# Core dependencies
-python -c "from isaacgym import gymapi; print('✓ Isaac Gym OK')"
-python -c "import mujoco; print('✓ MuJoCo OK')"
-python -c "import torch; print('✓ PyTorch', torch.__version__, 'CUDA:', torch.cuda.is_available())"
-
-# ML packages
-python -c "import numpy, scipy, pandas, sklearn; print('✓ Data packages OK')"
-python -c "import matplotlib, seaborn; print('✓ Plotting packages OK')"
-
-# RL packages
-python -c "import gymnasium; print('✓ Gymnasium OK')"
-
-# Check CUDA availability (important for PPO training)
-python -c "import torch; assert torch.cuda.is_available(), 'CUDA not available!'; print('✓ CUDA available on', torch.cuda.get_device_name(0))"
-```
 
 **If CUDA errors occur:**
 ```bash
